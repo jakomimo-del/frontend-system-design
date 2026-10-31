@@ -318,15 +318,20 @@ const EX = {
 };
 const ARMS = ["dbCurl", "skull", "lateral", "cableCurl", "ropePush"];
 const DAYS = [
-  { key: "mo", wd: 1, short: "Mo", name: "Schultern & Arme", tag: "A", ex: ["smithPress", ...ARMS] },
-  { key: "di", wd: 2, short: "Di", name: "Beine", tag: "A", ex: ["hackSquat", "legCurl", "legExt", "abAd", "calves"] },
+  { key: "mo", wd: 1, short: "Mo", name: "Schultern & Arme", tag: "", ex: ["smithPress", ...ARMS] },
+  { key: "di", wd: 2, short: "Di", name: "Beine", tag: "", ex: ["hackSquat", "legCurl", "legExt", "abAd", "calves"] },
   { key: "mi", wd: 3, short: "Mi", name: "Brust & Rücken", tag: "", ex: ["inclinePress", "frontRow", "butterfly", "rackPull"] },
   { key: "do", wd: 4, short: "Do", name: "Pause", rest: true, ex: [] },
-  { key: "fr", wd: 5, short: "Fr", name: "Schultern & Arme", tag: "B", ex: ["revFly", ...ARMS] },
-  { key: "sa", wd: 6, short: "Sa", name: "Beine", tag: "B", ex: ["splitSquat", "legCurl", "legExt", "calves"] },
+  { key: "lo", wd: 5, short: "Fr", name: "Lower Body", tag: "", ex: ["splitSquat", "legCurl", "legExt", "calves"] },
+  { key: "up", wd: 6, short: "Sa", name: "Upper Body", tag: "", ex: ["inclinePress", "frontRow", "lateral", "dbCurl", "ropePush", "revFly"] },
   { key: "so", wd: 0, short: "So", name: "Pause", rest: true, ex: [] },
 ];
-const DAY = Object.fromEntries(DAYS.map(d => [d.key, d]));
+// Earlier plan days, kept so older sessions in the history keep their names
+const OLD_DAYS = [
+  { key: "fr", wd: 5, short: "Fr", name: "Schultern & Arme", tag: "B", ex: ["revFly", ...ARMS] },
+  { key: "sa", wd: 6, short: "Sa", name: "Beine", tag: "B", ex: ["splitSquat", "legCurl", "legExt", "calves"] },
+];
+const DAY = Object.fromEntries([...OLD_DAYS, ...DAYS].map(d => [d.key, d]));
 const LB = 0.45359237;
 
 // =====================================================================
@@ -564,7 +569,7 @@ function saveDraft() {
   saveDoc("sessions", sessionId(d.date, d.day), () => Object.keys(d.entries).length ? { date: d.date, day: d.day, entries: d.entries } : null);
 }
 const progressText = (day, n) => `${n} von ${day.ex.length} Übungen eingetragen · ${wdName(state.date)}, ${fmtDate(state.date)}`;
-function shortName(d) { return { mo: "Arme A", di: "Beine A", mi: "Brust", fr: "Arme B", sa: "Beine B" }[d.key]; }
+function shortName(d) { return { mo: "Arme", di: "Beine", mi: "Brust", lo: "Lower", up: "Upper", fr: "Arme B", sa: "Beine B" }[d.key]; }
 
 function renderLog() {
   const day = DAY[state.day];
